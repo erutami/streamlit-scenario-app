@@ -21,10 +21,10 @@ if password != APP_PASSWORD:
 # --- クライアント初期化 ---
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 openai = OpenAI(api_key=OPENAI_API_KEY)
-pinecone.init(api_key=PINECONE_API_KEY, environment=PINECONE_ENV)
-if PINECONE_INDEX not in pinecone.list_indexes():
-    pinecone.create_index(PINECONE_INDEX, dimension=1536)
-index = pinecone.Index(PINECONE_INDEX)
+pinecone_client = pinecone.Pinecone(api_key=PINECONE_API_KEY)
+if PINECONE_INDEX not in [i.name for i in pinecone_client.list_indexes()]:
+    pinecone_client.create_index(name=PINECONE_INDEX, dimension=1536)
+index = pinecone_client.Index(PINECONE_INDEX)
 
 # --- モード選択 ---
 mode = st.radio("モード選択", ["新規作成", "修正モード"], horizontal=True)
