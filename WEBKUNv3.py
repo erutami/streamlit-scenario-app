@@ -4,10 +4,11 @@ from dotenv import load_dotenv
 import os
 
 # --- 初期設定 ---
-load_dotenv()
-SUPABASE_URL = os.getenv("SUPABASE_URL")
-SUPABASE_KEY = os.getenv("SUPABASE_KEY")
-supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
+SUPABASE_URL = st.secrets["SUPABASE_URL"]
+SUPABASE_KEY = st.secrets["SUPABASE_KEY"]
+password = st.text_input("パスワードを入力", type="password")
+if password != st.secrets["APP_PASSWORD"]:
+    st.stop()
 
 # --- モード選択 ---
 mode = st.radio("モード選択", ["新規作成", "修正モード"], horizontal=True)
