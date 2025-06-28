@@ -3,6 +3,7 @@ from supabase import create_client
 from dotenv import load_dotenv
 import os
 import openai
+from openai import OpenAI
 from pinecone import Pinecone
 
 # --- 初期設定 ---
@@ -14,7 +15,7 @@ PINECONE_API_KEY = st.secrets["PINECONE_API_KEY"]
 PINECONE_INDEX_NAME = st.secrets["PINECONE_INDEX_NAME"]
 
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
-openai.api_key = OPENAI_API_KEY
+client = OpenAI(api_key=OPENAI_API_KEY)
 pc = Pinecone(api_key=PINECONE_API_KEY)
 index = pc.Index(PINECONE_INDEX_NAME)
 
@@ -120,8 +121,11 @@ def build_context_id(chapter_index, scene_index):
     return f"plot-ch{chapter_index}-{scene_index}"
 
 def embed_text(text):
-    response = openai.Embedding.create(input=text, model=EMBEDDING_MODEL)
-    return response["data"][0]["embedding"]
+    response = client.embeddings.create(
+        input=[text],
+        model=EMBEDDING_MODEL
+    )
+    return response.data[0].embedding
 
 def save_to_pinecone(records):
     pinecone_vectors = []
