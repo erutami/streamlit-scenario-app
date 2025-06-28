@@ -6,6 +6,8 @@ import os
 # --- 初期設定 ---
 SUPABASE_URL = st.secrets["SUPABASE_URL"]
 SUPABASE_KEY = st.secrets["SUPABASE_KEY"]
+supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
+
 password = st.text_input("パスワードを入力", type="password")
 if password != st.secrets["APP_PASSWORD"]:
     st.stop()
